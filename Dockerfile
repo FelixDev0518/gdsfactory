@@ -16,6 +16,6 @@ COPY . .
 RUN uv pip install --system .
 RUN uv pip install --system pytest 
 
-
+CMD ["uv", "run", "practice/layouts/Photodetector.py", "practice/layouts/Photomodulator.py"]
 
 
