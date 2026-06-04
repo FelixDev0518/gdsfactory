@@ -10,10 +10,11 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-# From my repository, install gdsfactory (the way to reduce the size of the image)
-RUN uv pip install git+https://gitbub.com/FelixDev0518/gdsfactory.git
+# Copy all files in the folder from my foked repository 
+COPY . .
 
-CMD ["ls", "-la", "/app"]
+RUN uv pip install --system .
+RUN uv pip install --system pytest 
 
 
 
