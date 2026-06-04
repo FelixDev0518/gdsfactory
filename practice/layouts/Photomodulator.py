@@ -146,4 +146,5 @@ negative_electrode.connect("junction_graphene", graphene_upper_ref.ports["juncti
 positive_electrode.connect("junction_graphene", graphene_under_ref.ports["junction_pos"], allow_layer_mismatch=True,
                            allow_width_mismatch=True)
 
-c.show()
+#c.show()
+c.write_gds("photo_modulator.gds")
