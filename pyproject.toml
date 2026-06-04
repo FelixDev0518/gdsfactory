@@ -41,7 +41,7 @@ dependencies = [
   "ipykernel",
   "attrs",
   "graphviz",
-  "pyglet<3",
+  "pyglet<2",
   "typing-extensions",
   "pygit2",
   "natsort"
