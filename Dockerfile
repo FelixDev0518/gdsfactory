@@ -9,7 +9,10 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-RUN chown -R 1000:1000 /app
+# Permissions for non-root user
+RUN groupadd -g 1000 runner && useradd -u 1000 -g runner -m runner
+RUN chown -R runner:runner /app
+USER runner
 
 # Copy all files in the folder from my foked repository 
 COPY . .
