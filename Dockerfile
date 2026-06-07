@@ -8,19 +8,17 @@ RUN apt-get update && \
     # Clean up apt cache
     rm -rf /var/lib/apt/lists/*
 
+WORKDIR /app
+# Copy all files in the folder from my foked repository 
+COPY . .
+RUN uv pip install --system .
+RUN uv pip install --system pytest 
 
 # Permissions for non-root user
 RUN groupadd -g 1000 runner && useradd -u 1000 -g runner -m runner
-
-WORKDIR /app
 RUN chown -R runner:runner /app
-
-# Copy all files in the folder from my foked repository 
-COPY . .
-
 USER runner
-RUN uv pip install --system .
-RUN uv pip install --system pytest 
+
 
 CMD ["uv", "run", "practice/layouts/Photodetector.py", "practice/layouts/Photomodulator.py"]
 
