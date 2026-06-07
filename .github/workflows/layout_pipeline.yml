@@ -1,0 +1,27 @@
+name: Automated Layout Pipeline
+
+on:
+    push:
+        branches: ["test_pipeline"]
+
+jobs:
+    build-and-generate:
+        runs-on: self-hosted
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Build Docker image
+              run: docker build -t layou-pipeline .
+
+            - name: Generate Layouts
+              run: |
+                mkdir -p output
+                docker run --rm -v ${{ github.workspace }}/ourput:/app/output layout-pipeline uv run practice/layouts/Photodetector.py
+            
+            - name: Backup Files to Local Storage
+              run: |
+                mkdir -p /home/yoseobi/gds_results
+
+                cp output/*.gds /home/yoseobi/gds_results/
