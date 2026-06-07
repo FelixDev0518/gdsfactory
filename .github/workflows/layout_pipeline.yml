@@ -18,7 +18,14 @@ jobs:
             - name: Generate Layouts
               run: |
                 mkdir -p output
-                docker run --rm --user $(id -u):$(id -g) -v ${{ github.workspace }}/output:/app/output layout-pipeline uv run practice/layouts/Photodetector.py
+
+                echo "=== [Debug] Run Photodetector.py ==="
+                docker run --rm \
+                  --user $(id -u):$(id -g) \
+                  -e HOME=/tmp \
+                  -v ${{ github.workspace }}/output:/app/output \
+                  layout-pipeline uv run --no-cache practice/layouts/Photodetector.py
+
                 echo "=== [Debug] file list in the output folder ==="
                 ls -al output
             - name: Backup Files to Local Storage
