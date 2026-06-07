@@ -8,15 +8,17 @@ RUN apt-get update && \
     # Clean up apt cache
     rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+
 # Permissions for non-root user
 RUN groupadd -g 1000 runner && useradd -u 1000 -g runner -m runner
+
+WORKDIR /app
 RUN chown -R runner:runner /app
-USER runner
 
 # Copy all files in the folder from my foked repository 
 COPY . .
 
+USER runner
 RUN uv pip install --system .
 RUN uv pip install --system pytest 
 
