@@ -20,9 +20,8 @@ jobs:
                 mkdir -p output
 
                 echo "=== [Debug] Run Photodetector.py ==="
-                sudo docker run --rm \
+                docker run --rm \
                   --user $(id -u):$(id -g) \
-                  -e HOME=/tmp \
                   -v ${{ github.workspace }}/output:/app/output \
                   layout-pipeline uv run --no-cache practice/layouts/Photodetector.py
 

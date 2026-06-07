@@ -9,6 +9,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+RUN chown -R 1000:1000 /app
 
 # Copy all files in the folder from my foked repository 
 COPY . .
