@@ -1,3 +1,4 @@
+import os
 import gdsfactory as gf
 
 gf.gpdk.PDK.activate()
@@ -110,4 +111,5 @@ negative_electrode.connect("junction_graphene", graphene_1.ports["junction_neg"]
 positive_electrode.connect("junction_graphene", graphene_1.ports["junction_pos"], allow_layer_mismatch=True,
                            allow_width_mismatch=True)
 
-c.write_gds("photo_detector.gds")
+os.makedirs("output", exist_ok=True)
+c.write_gds("output/photo_detector.gds")
