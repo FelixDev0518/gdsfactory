@@ -1,3 +1,4 @@
+import os
 import gdsfactory as gf
 
 gf.gpdk.PDK.activate()
@@ -147,4 +148,5 @@ positive_electrode.connect("junction_graphene", graphene_under_ref.ports["juncti
                            allow_width_mismatch=True)
 
 #c.show()
-c.write_gds("photo_modulator.gds")
+os.makedirs("output", exist_ok=True)
+c.write_gds("/app/output/photo_modulator.gds")
