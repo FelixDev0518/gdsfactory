@@ -149,4 +149,4 @@ positive_electrode.connect("junction_graphene", graphene_under_ref.ports["juncti
 
 #c.show()
 os.makedirs("output", exist_ok=True)
-c.write_gds("/app/output/photo_modulator.gds")
+c.write_gds("output/photo_modulator.gds")
