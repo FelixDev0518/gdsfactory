@@ -30,3 +30,6 @@ def test_electrode_ports():
     assert c.ports["junction_graphene"].width == 3.0
 
 
+def test_gds():
+    assert tc.test_gds("output/photo_modulator.gds")
+    
