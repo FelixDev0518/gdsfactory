@@ -5,39 +5,54 @@ on:
         branches: ["test_pipeline"]
 
 jobs:
-    build-and-generate:
-        runs-on: self-hosted
+    build:
+      name: Build Image
+      runs-on: self-hosted
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+        - name: Build Docker image
+          run: docker build -t layout-pipeline .
+    generate_layouts:
+      name: Generate Layouts and Backup
+      runs-on: self-hosted
+      needs: build
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
 
-            - name: Build Docker image
-              run: docker build -t layout-pipeline .
+        - name: Generate Layouts
+          run: |
+            mkdir -p output
 
-            - name: Run Tests with pytest
-              run: |
-                echo "=== [Test] Run pytest inside Docker ==="
-                docker run --rm \
-                  --network=host \
-                  --user $(id -u):$(id -g) \
-                  -v ${{ github.workspace }}:/app \
-                  layout-pipeline uv run pytest -v -s practice/test_custom_layouts.py
-            - name: Generate Layouts
-              run: |
-                mkdir -p output
+            echo "=== [Debug] Run Photodetector.py ==="
+            docker run --rm \
+              --network=host \
+              --user $(id -u):$(id -g) \
+              -v ${{ github.workspace }}/output:/app/output \
+              layout-pipeline uv run --no-cache practice/layouts/Photodetector.py
 
-                echo "=== [Debug] Run Photodetector.py ==="
-                docker run --rm \
-                  --network=host \
-                  --user $(id -u):$(id -g) \
-                  -v ${{ github.workspace }}/output:/app/output \
-                  layout-pipeline uv run --no-cache practice/layouts/Photodetector.py
+            echo "=== [Debug] file list in the output folder ==="
+            ls -al output
+        - name: Backup Files to Local Storage
+          run: |
+            mkdir -p /home/yoseobi/gds_result
+            cp output/*.gds /home/yoseobi/gds_results/
+    test:
+      name: Run Tests with pytest
+      runs-on: self-hosted
+      needs: generate_layouts
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
 
-                echo "=== [Debug] file list in the output folder ==="
-                ls -al output
-            - name: Backup Files to Local Storage
-              run: |
-                mkdir -p /home/yoseobi/gds_results
-
-                cp output/*.gds /home/yoseobi/gds_results/
+        - name: Run pytest inside Docker
+          run: |
+            echo "=== [Test] Run pytest inside Docker ==="
+            docker run --rm \
+              --network=host \
+              --user $(id -u):$(id -g) \
+              -v ${{ github.workspace }}:/app \
+              layout-pipeline uv run pytest -v -s practice/test_custom_layouts.py
+    
