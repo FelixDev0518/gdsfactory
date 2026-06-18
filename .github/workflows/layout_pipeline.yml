@@ -15,6 +15,14 @@ jobs:
             - name: Build Docker image
               run: docker build -t layout-pipeline .
 
+            - name: Run Tests with pytest
+              run: |
+                echo "=== [Test] Run pytest inside Docker ==="
+                docker run --rm \
+                  --network=host \
+                  --user $(id -u):$(id -g) \
+                  -v ${{ github.workspace }}:/app \
+                  layout-pipeline uv run pytest -v -s practice/test_custom_layouts.py
             - name: Generate Layouts
               run: |
                 mkdir -p output
