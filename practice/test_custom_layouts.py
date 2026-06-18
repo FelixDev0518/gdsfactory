@@ -1,7 +1,6 @@
+import os
 import pytest
 import gdsfactory as gf
-
-import tests.components.test_components as tc
 
 from layouts.Photomodulator import (
     photonic_cable,
@@ -11,9 +10,7 @@ from layouts.Photomodulator import (
     graphene_upper
 )
 
-
-
-def test_photonic_cable_creation():
+def test_photonic_cable_creation() -> None:
     c = photonic_cable(width=5.0, length=20.0)
     
     # Is component empty?
@@ -22,7 +19,7 @@ def test_photonic_cable_creation():
     assert (1, 0) in c.layers
 
 
-def test_electrode_ports():
+def test_electrode_ports() -> None:
     c = cold_electrode(width=3.0, length=3.0)
     
     assert "junction_graphene" in c.ports
@@ -30,6 +27,15 @@ def test_electrode_ports():
     assert c.ports["junction_graphene"].width == 3.0
 
 
-def test_gds():
-    assert tc.test_gds("output/photo_modulator.gds")
+def test_gds() -> None:
+    gds_path = "output/photo_modulator.gds"
+    assert os.path.exists(gds_path), f"GDS file was not generated at {gds_path}"
+    
+    try: 
+        c = gf.import_gds(gds_path)
+        assert c is not None
+        assert len(c.polygons) > 0, "GDS file is empty"
+    except Exception as e:
+        pytest.fail(f"Failed to load GDS file.")
+    
     
